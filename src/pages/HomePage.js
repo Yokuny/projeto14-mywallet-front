@@ -8,6 +8,7 @@ import {
   Value,
   ButtonsContainer,
 } from "../style/homePageStyle";
+import { Link } from "react-router-dom";
 
 export default function HomePage() {
   return (
@@ -44,17 +45,21 @@ export default function HomePage() {
 
       <ButtonsContainer>
         <button>
-          <AiOutlinePlusCircle />
-          <p>
-            Nova <br /> entrada
-          </p>
+          <Link to={"/nova-transacao/entrada"}>
+            <AiOutlinePlusCircle />
+            <p>
+              Nova <br /> entrada
+            </p>
+          </Link>
         </button>
         <button>
-          <AiOutlineMinusCircle />
-          <p>
-            Nova <br />
-            saída
-          </p>
+          <Link to={"/nova-transacao/saida"}>
+            <AiOutlineMinusCircle />
+            <p>
+              Nova <br />
+              saída
+            </p>
+          </Link>
         </button>
       </ButtonsContainer>
     </HomeContainer>

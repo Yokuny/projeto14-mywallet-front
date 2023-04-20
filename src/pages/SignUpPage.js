@@ -1,18 +1,11 @@
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import MyWalletLogo from "../components/MyWalletLogo"
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import SingUpContainer from "../components/SingUpContainer.js";
+import MyWalletLogo from "../components/MyWalletLogo";
 import emailRegex from "../scripts/regex";
 
-const SingUpContainer = styled.section`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 export default function SignUpPage() {
   const navigate = useNavigate();
   const [name, setName] = useState("Nome");
