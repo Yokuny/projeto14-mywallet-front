@@ -3,6 +3,8 @@ import styled from "styled-components"
 import MyWalletLogo from "../components/MyWalletLogo"
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import emailRegex from "../scripts/regex";
 
 const SingUpContainer = styled.section`
   height: 100vh;
@@ -11,40 +13,37 @@ const SingUpContainer = styled.section`
   justify-content: center;
   align-items: center;
 `;
-const emailRegex = RegExp(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+(\.[a-z]+)?$/i);
 export default function SignUpPage() {
+  const navigate = useNavigate();
   const [name, setName] = useState("Nome");
   const [email, setEmail] = useState("E-mail");
   const [password, setPassword] = useState("Senha");
   const [passwordConfirm, setPasswordConfirm] = useState("Confirme a senha");
 
+  const register = async () => {
+    if (name.length < 3 || !emailRegex.test(email) || password.length < 3 || passwordConfirm !== password) {
+      alert("Preencha os campos corretamente!");
+      return;
+    } else {
+      const user = {
+        name,
+        email,
+        password,
+      };
+      try {
+        await axios.post("http://localhost:5000/cadastro", user);
+        navigate("/");
+      } catch (err) {
+        console.log(err.response.data.message);
+      }
+    }
+  };
   return (
     <SingUpContainer>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
-          if (
-            name.length < 3 ||
-            !emailRegex.test(email) ||
-            password.length < 3 ||
-            passwordConfirm !== password
-          ) {
-            alert("Preencha os campos corretamente!");
-            return;
-          } else {
-            const user = {
-              name,
-              email,
-              password,
-            };
-            try {
-              const res = await axios.post("http://localhost:5000/cadastro", user);
-              const resData = await res.data;
-              console.log(resData);
-            } catch (err) {
-              console.log(err.response.resquest.response);
-            }
-          }
+          register();
         }}>
         <MyWalletLogo />
         <input
