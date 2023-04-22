@@ -21,7 +21,11 @@ export default function SignInPage() {
       };
       try {
         const response = await axios.post("http://localhost:5000/login", user);
-        localStorage.setItem("token", JSON.stringify(response.data));
+        //
+        console.log(response.data.token);
+        //
+        localStorage.setItem("token", JSON.stringify(response.data.token));
+        localStorage.setItem("name", JSON.stringify(response.data.name));
         navigate("/home");
       } catch (err) {
         console.log(err.response.data.message);
@@ -37,8 +41,7 @@ export default function SignInPage() {
         }}>
         <MyWalletLogo />
         <input
-          type={email}
-          placeholder="E-mail"
+          placeholder={email}
           onChange={({ target }) => {
             if (emailRegex.test(target.value)) {
               setEmail(target.value);
@@ -47,11 +50,11 @@ export default function SignInPage() {
               target.style.border = "2px solid crimson";
             }
           }}
+          type="email"
           required
         />
         <input
           placeholder={password}
-          type="password"
           onChange={({ target }) => {
             if (target.value.length < 3) {
               target.style.border = "2px solid crimson";
@@ -60,6 +63,7 @@ export default function SignInPage() {
               setPassword(target.value);
             }
           }}
+          type="password"
           required
         />
         <button>Entrar</button>

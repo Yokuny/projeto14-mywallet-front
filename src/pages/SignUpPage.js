@@ -40,7 +40,6 @@ export default function SignUpPage() {
         }}>
         <MyWalletLogo />
         <input
-          type="text"
           placeholder={name}
           onChange={(e) => {
             if (e.target.value.length < 3) {
@@ -50,11 +49,11 @@ export default function SignUpPage() {
               setName(e.target.value);
             }
           }}
+          type="text"
           required
         />
         <input
-          type={email}
-          placeholder="E-mail"
+          placeholder={email}
           onChange={(e) => {
             if (emailRegex.test(e.target.value)) {
               setEmail(e.target.value);
@@ -63,11 +62,11 @@ export default function SignUpPage() {
               e.target.style.border = "2px solid crimson";
             }
           }}
+          type="E-mail"
           required
         />
         <input
           placeholder={password}
-          type="password"
           onChange={(e) => {
             if (e.target.value.length < 3) {
               e.target.style.border = "2px solid crimson";
@@ -76,11 +75,11 @@ export default function SignUpPage() {
               setPassword(e.target.value);
             }
           }}
+          type="password"
           required
         />
         <input
           placeholder={passwordConfirm}
-          type="password"
           onChange={(e) => {
             if (e.target.value.length < 3) {
               e.target.style.border = "2px solid crimson";
@@ -93,6 +92,7 @@ export default function SignUpPage() {
               setPasswordConfirm(e.target.value);
             }
           }}
+          type="password"
           required
         />
         <button>Cadastrar</button>
