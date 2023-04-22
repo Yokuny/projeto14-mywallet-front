@@ -1,12 +1,18 @@
 import styled from "styled-components"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 export default function TransactionsPage() {
-  const [value, setValue] = useState("Valor");
-  const [description, setDescription] = useState("Descrição");
+  const [valor, setValor] = useState("Valor");
+  const [descricao, setDescricao] = useState("Descrição");
   const { tipo } = useParams();
   const navigate = useNavigate();
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("token"));
+    if (!token) {
+      return navigate("/");
+    }
+  }, []);
   return (
     <TransactionsContainer>
       <h1>Nova TRANSAÇÃO</h1>
@@ -14,29 +20,27 @@ export default function TransactionsPage() {
         onSubmit={(e) => {
           e.preventDefault();
           const token = JSON.parse(localStorage.getItem("token"));
-          if (!token) {
-            navigate("/login");
-          }
           axios
             .post(
               `http://localhost:5000/nova-transacao/${tipo}`,
+              { valor, descricao },
               {
                 headers: { Authorization: `Bearer ${token}` },
-              },
-              { value, description }
+              }
             )
-            .then((res) => {
+            .then(() => {
               navigate("/home");
             })
             .catch((err) => {
-              alert(err.message);
+              console.log(err);
+              alert(err.data);
             });
         }}>
         <input
-          placeholder={value}
+          placeholder={valor}
           onChange={({ target }) => {
             if (parseFloat(target.value) >= 0.01) {
-              setValue(target.value);
+              setValor(target.value);
               target.style.border = "2px solid yellowgreen";
             } else {
               target.style.border = "2px solid crimson";
@@ -46,10 +50,10 @@ export default function TransactionsPage() {
           required
         />
         <input
-          placeholder={description}
+          placeholder={descricao}
           onChange={({ target }) => {
             if (target.value.length > 1) {
-              setDescription(target.value);
+              setDescricao(target.value);
               target.style.border = "2px solid yellowgreen";
             } else {
               target.style.border = "2px solid crimson";

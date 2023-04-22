@@ -20,7 +20,7 @@ export default function HomePage() {
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) {
-      navigate("/login");
+      return navigate("/");
     }
     if (localStorage.getItem("name")) {
       setDisplayName(JSON.parse(localStorage.getItem("name")));
