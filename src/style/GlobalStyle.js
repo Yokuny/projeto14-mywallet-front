@@ -45,12 +45,12 @@ const GlobalStyle = createGlobalStyle`
         border-radius: 5px;
     }
     a {
-        font-weight: 700;
-        font-size: 15px;
+        font-weight: 700 !important;
+        font-size: 15px !important;
         line-height: 18px;
         color: white;
         text-decoration: none;
-        padding-top: 30px;
+        padding-top: 30px !important;
     }
 `;
 export default GlobalStyle;
