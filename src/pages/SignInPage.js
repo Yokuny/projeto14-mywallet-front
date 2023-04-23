@@ -21,7 +21,8 @@ const SignInPage = () => {
       senha,
     };
     try {
-      const response = await axios.post("http://localhost:5000/login", user);
+      const connection = process.env.REACT_APP_API_URL;
+      const response = await axios.post(`${connection}login`, user);
       localStorage.setItem("token", JSON.stringify(response.data.token));
       localStorage.setItem("nome", JSON.stringify(response.data.nome));
       navigate("/home");

@@ -1,4 +1,4 @@
-import { Link, json } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -25,7 +25,8 @@ const SignUpPage = () => {
       senha,
     };
     try {
-      await axios.post("http://localhost:5000/cadastro", user);
+      const connection = process.env.REACT_APP_API_URL;
+      await axios.post(`${connection}cadastro`, user);
       navigate("/");
     } catch (err) {
       console.log(JSON.stringify(err.message));

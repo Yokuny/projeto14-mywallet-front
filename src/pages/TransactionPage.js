@@ -40,8 +40,9 @@ const TransactionsPage = () => {
     e.preventDefault();
     const token = JSON.parse(localStorage.getItem("token"));
     try {
+      const connection = process.env.REACT_APP_API_URL;
       await axios.post(
-        `http://localhost:5000/nova-transacao/${tipo}`,
+        `${connection}nova-transacao/${tipo}`,
         { valor, descricao },
         { headers: { Authorization: `Bearer ${token}` } }
       );

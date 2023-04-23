@@ -29,7 +29,8 @@ const HomePage = () => {
     const nomeLocal = localStorage.getItem("nome");
     if (nomeLocal) setMostrarNome(nomeLocal);
 
-    const historico = axios.get("http://localhost:5000/home", {
+    const connection = process.env.REACT_APP_API_URL;
+    const historico = axios.get(`${connection}home`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     historico
