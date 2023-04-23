@@ -8,6 +8,7 @@ import {
   HomeContainer,
   Header,
   TransactionsContainer,
+  Saldo,
   ListItemContainer,
   Value,
   ButtonsContainer,
@@ -17,7 +18,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const [mostrarNome, setMostrarNome] = useState("Fulano");
   const [transacao, setTransacao] = useState([]);
-
+  const [saldo, setSaldo] = useState(0);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) return navigate("/");
@@ -32,6 +33,12 @@ const HomePage = () => {
         setMostrarNome(res.data.name);
         setTransacao(res.data.transactions.reverse());
         console.log(res.data.transactions);
+        const saldoFinal = res.data.transactions.reduce((saldo, item) => {
+          const valor = parseFloat(item.valor);
+          const operacao = item.tipo === "entrada" ? 1 : -1;
+          return saldo + valor * operacao;
+        }, 0);
+        setSaldo(saldoFinal);
       })
       .catch((err) => {
         console.log(JSON.stringify(err.message));
@@ -44,7 +51,6 @@ const HomePage = () => {
         <h1>Olá, {mostrarNome}</h1>
         <BiExit />
       </Header>
-
       <TransactionsContainer>
         <ul>
           {transacao.map((item) => {
@@ -59,14 +65,11 @@ const HomePage = () => {
             );
           })}
         </ul>
-
-        <article>
-          <strong>Saldo</strong>
-
-          {/* <Value color={"positivo"}>{transacao.reduce((item) => )}</Value> */}
-        </article>
       </TransactionsContainer>
-
+      <Saldo>
+        <strong>Saldo</strong>
+        <Value color={saldo >= 0 ? "positivo" : "negativo"}>{saldo}</Value>
+      </Saldo>
       <ButtonsContainer>
         <button>
           <Link to={"/nova-transacao/entrada"}>

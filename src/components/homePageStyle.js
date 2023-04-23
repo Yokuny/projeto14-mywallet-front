@@ -17,18 +17,25 @@ export const TransactionsContainer = styled.article`
   flex-grow: 1;
   background-color: #fff;
   color: #000;
-  border-radius: 5px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  article {
-    display: flex;
-    justify-content: space-between;
-    strong {
-      font-weight: 700;
-      text-transform: uppercase;
-    }
+  overflow-y: auto;
+  height: auto;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px;
+`;
+export const Saldo = styled.article`
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  background-color: #fff;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  strong {
+    font-weight: 700;
+    text-transform: uppercase;
   }
 `;
 export const ButtonsContainer = styled.section`
