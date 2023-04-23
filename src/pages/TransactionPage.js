@@ -28,7 +28,6 @@ const TransactionsPage = () => {
       target.style.border = "2px solid crimson";
     }
   };
-
   const inputDescricao = ({ target }) => {
     if (target.value.length > 1) {
       setDescricao(target.value);

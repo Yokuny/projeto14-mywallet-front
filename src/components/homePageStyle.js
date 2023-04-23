@@ -12,6 +12,9 @@ export const Header = styled.header`
   margin-bottom: 15px;
   font-size: 26px;
   color: white;
+  div {
+    cursor: pointer;
+  }
 `;
 export const TransactionsContainer = styled.article`
   flex-grow: 1;

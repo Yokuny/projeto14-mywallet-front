@@ -16,9 +16,13 @@ import {
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const [mostrarNome, setMostrarNome] = useState("Fulano");
+  const [mostrarNome, setMostrarNome] = useState("bom dia!");
   const [transacao, setTransacao] = useState([]);
   const [saldo, setSaldo] = useState(0);
+  const logOut = () => {
+    localStorage.clear();
+    navigate("/");
+  };
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) return navigate("/");
@@ -30,10 +34,12 @@ const HomePage = () => {
     });
     historico
       .then((res) => {
-        setMostrarNome(res.data.name);
-        setTransacao(res.data.transactions.reverse());
-        console.log(res.data.transactions);
-        const saldoFinal = res.data.transactions.reduce((saldo, item) => {
+        if (res.data.nome) {
+          setMostrarNome(res.data.nome);
+        }
+        setTransacao(res.data.transacoes.reverse());
+        console.log(res.data.transacoes);
+        const saldoFinal = res.data.transacoes.reduce((saldo, item) => {
           const valor = parseFloat(item.valor);
           const operacao = item.tipo === "entrada" ? 1 : -1;
           return saldo + valor * operacao;
@@ -49,7 +55,9 @@ const HomePage = () => {
     <HomeContainer>
       <Header>
         <h1>Olá, {mostrarNome}</h1>
-        <BiExit />
+        <div onClick={logOut}>
+          <BiExit />
+        </div>
       </Header>
       <TransactionsContainer>
         <ul>
@@ -83,8 +91,7 @@ const HomePage = () => {
           <Link to={"/nova-transacao/saida"}>
             <AiOutlineMinusCircle />
             <p>
-              Nova <br />
-              saída
+              Nova <br /> saída
             </p>
           </Link>
         </button>

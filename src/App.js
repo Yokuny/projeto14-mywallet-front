@@ -14,6 +14,7 @@ const App = () => {
           <Route path="/cadastro" element={<SignUpPage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/nova-transacao/:tipo" element={<TransactionsPage />} />
+          <Route path="*" element={<SignInPage />} />
         </Routes>
       </BrowserRouter>
     </PagesContainer>

@@ -23,7 +23,7 @@ const SignInPage = () => {
     try {
       const response = await axios.post("http://localhost:5000/login", user);
       localStorage.setItem("token", JSON.stringify(response.data.token));
-      localStorage.setItem("nome", JSON.stringify(response.data.name));
+      localStorage.setItem("nome", JSON.stringify(response.data.nome));
       navigate("/home");
     } catch (err) {
       console.log(JSON.stringify(err.message));
