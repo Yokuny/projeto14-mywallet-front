@@ -1,6 +1,7 @@
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { BiExit } from "react-icons/bi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
 import {
@@ -10,66 +11,59 @@ import {
   ListItemContainer,
   Value,
   ButtonsContainer,
-} from "../style/homePageStyle";
-import { Link } from "react-router-dom";
+} from "../components/homePageStyle";
 
-export default function HomePage() {
+const HomePage = () => {
   const navigate = useNavigate();
-  const [displayName, setDisplayName] = useState("Fulano");
-  const [transactions, setTransactions] = useState([]);
+  const [mostrarNome, setMostrarNome] = useState("Fulano");
+  const [transacao, setTransacao] = useState([]);
+
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
-    if (!token) {
-      return navigate("/");
-    }
-    if (localStorage.getItem("name")) {
-      setDisplayName(JSON.parse(localStorage.getItem("name")));
-    }
-    console.log(token);
-    const history = axios.get("http://localhost:5000/home", {
+    if (!token) return navigate("/");
+    const nomeLocal = localStorage.getItem("nome");
+    if (nomeLocal) setMostrarNome(nomeLocal);
+
+    const historico = axios.get("http://localhost:5000/home", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    history
+    historico
       .then((res) => {
-        setDisplayName(res.data.name);
-        setTransactions(res.data.transactions);
-        //
-        console.log(res.data);
-        //
+        setMostrarNome(res.data.name);
+        setTransacao(res.data.transactions.reverse());
+        console.log(res.data.transactions);
       })
       .catch((err) => {
+        console.log(JSON.stringify(err.message));
         alert(err.message);
       });
   }, []);
   return (
     <HomeContainer>
       <Header>
-        <h1>Olá, {displayName}</h1>
+        <h1>Olá, {mostrarNome}</h1>
         <BiExit />
       </Header>
 
       <TransactionsContainer>
         <ul>
-          <ListItemContainer>
-            <div>
-              <span>30/11</span>
-              <strong>Almoço mãe</strong>
-            </div>
-            <Value color={"negativo"}>120,00</Value>
-          </ListItemContainer>
-
-          <ListItemContainer>
-            <div>
-              <span>15/11</span>
-              <strong>Salário</strong>
-            </div>
-            <Value color={"positivo"}>3000,00</Value>
-          </ListItemContainer>
+          {transacao.map((item) => {
+            return (
+              <ListItemContainer key={item._id}>
+                <div>
+                  <span>{item.data}</span>
+                  <strong>{item.descricao}</strong>
+                </div>
+                <Value color={item.tipo === "entrada" ? "positivo" : "negativo"}>{item.valor}</Value>
+              </ListItemContainer>
+            );
+          })}
         </ul>
 
         <article>
           <strong>Saldo</strong>
-          <Value color={"positivo"}>2880,00</Value>
+
+          {/* <Value color={"positivo"}>{transacao.reduce((item) => )}</Value> */}
         </article>
       </TransactionsContainer>
 
@@ -94,4 +88,5 @@ export default function HomePage() {
       </ButtonsContainer>
     </HomeContainer>
   );
-}
+};
+export default HomePage;

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, json } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,98 +6,78 @@ import SingUpContainer from "../components/SingUpContainer.js";
 import MyWalletLogo from "../components/MyWalletLogo";
 import emailRegex from "../scripts/regex";
 
-export default function SignUpPage() {
+const SignUpPage = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("Nome");
+  const [nome, setNome] = useState("Nome");
   const [email, setEmail] = useState("E-mail");
-  const [password, setPassword] = useState("Senha");
-  const [passwordConfirm, setPasswordConfirm] = useState("Confirme a senha");
+  const [senha, setSennha] = useState("Senha");
+  const [senhaCheck, setSennhaCheck] = useState("Confirme a senha");
 
-  const register = async () => {
-    if (name.length < 3 || !emailRegex.test(email) || password.length < 3 || passwordConfirm !== password) {
+  const registrar = async (e) => {
+    e.preventDefault();
+    if (nome.length < 3 || !emailRegex.test(email) || senha.length < 3 || senhaCheck !== senha) {
       alert("Preencha os campos corretamente!");
       return;
-    } else {
-      const user = {
-        name,
-        email,
-        password,
-      };
-      try {
-        await axios.post("http://localhost:5000/cadastro", user);
-        navigate("/");
-      } catch (err) {
-        console.log(err.response.data.message);
-      }
+    }
+    const user = {
+      nome,
+      email,
+      senha,
+    };
+    try {
+      await axios.post("http://localhost:5000/cadastro", user);
+      navigate("/");
+    } catch (err) {
+      console.log(JSON.stringify(err.message));
+      alert(err.message);
     }
   };
+
+  const inputNome = ({ target }) => {
+    if (target.value.length < 3) {
+      target.style.border = "2px solid crimson";
+    } else {
+      target.style.border = "2px solid yellowgreen";
+      setNome(target.value);
+    }
+  };
+  const inputEmail = ({ target }) => {
+    if (emailRegex.test(target.value)) {
+      setEmail(target.value);
+      target.style.border = "2px solid yellowgreen";
+    } else {
+      target.style.border = "2px solid crimson";
+    }
+  };
+  const inputSenha = ({ target }) => {
+    if (target.value.length < 3) {
+      target.style.border = "2px solid crimson";
+    } else {
+      target.style.border = "2px solid yellowgreen";
+      setSennha(target.value);
+    }
+  };
+  const inputSenhaCheck = ({ target }) => {
+    if (target.value.length < 3 || target.value !== senha) {
+      target.style.border = "2px solid crimson";
+    } else {
+      target.style.border = "2px solid yellowgreen";
+      setSennhaCheck(target.value);
+    }
+  };
+
   return (
     <SingUpContainer>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          register();
-        }}>
+      <form onSubmit={registrar}>
         <MyWalletLogo />
-        <input
-          placeholder={name}
-          onChange={(e) => {
-            if (e.target.value.length < 3) {
-              e.target.style.border = "2px solid crimson";
-            } else {
-              e.target.style.border = "2px solid yellowgreen";
-              setName(e.target.value);
-            }
-          }}
-          type="text"
-          required
-        />
-        <input
-          placeholder={email}
-          onChange={(e) => {
-            if (emailRegex.test(e.target.value)) {
-              setEmail(e.target.value);
-              e.target.style.border = "2px solid yellowgreen";
-            } else {
-              e.target.style.border = "2px solid crimson";
-            }
-          }}
-          type="E-mail"
-          required
-        />
-        <input
-          placeholder={password}
-          onChange={(e) => {
-            if (e.target.value.length < 3) {
-              e.target.style.border = "2px solid crimson";
-            } else {
-              e.target.style.border = "2px solid yellowgreen";
-              setPassword(e.target.value);
-            }
-          }}
-          type="password"
-          required
-        />
-        <input
-          placeholder={passwordConfirm}
-          onChange={(e) => {
-            if (e.target.value.length < 3) {
-              e.target.style.border = "2px solid crimson";
-            }
-            if (e.target.value === password) {
-              e.target.style.border = "2px solid yellowgreen";
-              setPasswordConfirm(e.target.value);
-            } else {
-              e.target.style.border = "2px solid crimson";
-              setPasswordConfirm(e.target.value);
-            }
-          }}
-          type="password"
-          required
-        />
+        <input placeholder={nome} onChange={inputNome} type="text" required />
+        <input placeholder={email} onChange={inputEmail} type="E-mail" required />
+        <input placeholder={senha} onChange={inputSenha} type="password" required />
+        <input placeholder={senhaCheck} onChange={inputSenhaCheck} type="password" required />
         <button>Cadastrar</button>
       </form>
       <Link to="/">Já tem uma conta? Entre agora!</Link>
     </SingUpContainer>
   );
-}
+};
+export default SignUpPage;

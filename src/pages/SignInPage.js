@@ -6,69 +6,56 @@ import MyWalletLogo from "../components/MyWalletLogo";
 import SingInContainer from "../components/SingInContainer.js";
 import emailRegex from "../scripts/regex";
 
-export default function SignInPage() {
+const SignInPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("E-mail");
-  const [password, setPassword] = useState("Senha");
-  const login = async () => {
-    if (!emailRegex.test(email) || password.length < 3) {
-      alert("Preencha os campos corretamente!");
-      return;
+  const [senha, setSenha] = useState("Senha");
+
+  const login = async (e) => {
+    e.preventDefault();
+    if (!emailRegex.test(email) || senha.length < 3) {
+      return alert("Preencha os campos corretamente!");
+    }
+    const user = {
+      email,
+      senha,
+    };
+    try {
+      const response = await axios.post("http://localhost:5000/login", user);
+      localStorage.setItem("token", JSON.stringify(response.data.token));
+      localStorage.setItem("nome", JSON.stringify(response.data.name));
+      navigate("/home");
+    } catch (err) {
+      console.log(JSON.stringify(err.message));
+      alert(err.message);
+    }
+  };
+  const inputEmail = ({ target }) => {
+    if (emailRegex.test(target.value)) {
+      setEmail(target.value);
+      target.style.border = "2px solid yellowgreen";
     } else {
-      const user = {
-        email,
-        password,
-      };
-      try {
-        const response = await axios.post("http://localhost:5000/login", user);
-        //
-        console.log(response.data.token);
-        //
-        localStorage.setItem("token", JSON.stringify(response.data.token));
-        localStorage.setItem("name", JSON.stringify(response.data.name));
-        navigate("/home");
-      } catch (err) {
-        console.log(err.response.data.message);
-      }
+      target.style.border = "2px solid crimson";
+    }
+  };
+  const inputSenha = ({ target }) => {
+    if (target.value.length < 3) {
+      target.style.border = "2px solid crimson";
+    } else {
+      target.style.border = "2px solid yellowgreen";
+      setSenha(target.value);
     }
   };
   return (
     <SingInContainer>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          login();
-        }}>
+      <form onSubmit={login}>
         <MyWalletLogo />
-        <input
-          placeholder={email}
-          onChange={({ target }) => {
-            if (emailRegex.test(target.value)) {
-              setEmail(target.value);
-              target.style.border = "2px solid yellowgreen";
-            } else {
-              target.style.border = "2px solid crimson";
-            }
-          }}
-          type="email"
-          required
-        />
-        <input
-          placeholder={password}
-          onChange={({ target }) => {
-            if (target.value.length < 3) {
-              target.style.border = "2px solid crimson";
-            } else {
-              target.style.border = "2px solid yellowgreen";
-              setPassword(target.value);
-            }
-          }}
-          type="password"
-          required
-        />
+        <input placeholder={email} onChange={inputEmail} type="email" required />
+        <input placeholder={senha} onChange={inputSenha} type="password" required />
         <button>Entrar</button>
       </form>
       <Link to="./cadastro">Primeira vez? Cadastre-se!</Link>
     </SingInContainer>
   );
-}
+};
+export default SignInPage;
