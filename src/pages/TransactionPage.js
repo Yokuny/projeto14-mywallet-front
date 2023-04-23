@@ -7,8 +7,9 @@ const TransactionsPage = () => {
   const { tipo } = useParams();
   const navigate = useNavigate();
 
-  const [valor, setValor] = useState("Valor");
-  const [descricao, setDescricao] = useState("Descrição");
+  const [valor, setValor] = useState(0);
+  const [displayValor, setDisplayValor] = useState("");
+  const [descricao, setDescricao] = useState("");
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
@@ -18,8 +19,10 @@ const TransactionsPage = () => {
   }, []);
 
   const inputValor = ({ target }) => {
-    if (parseFloat(target.value) >= 0.01) {
-      setValor(target.value);
+    const numero = target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+    setDisplayValor(numero);
+    if (Number(target.value) >= 0.01) {
+      setValor(numero);
       target.style.border = "2px solid yellowgreen";
     } else {
       target.style.border = "2px solid crimson";
@@ -54,8 +57,8 @@ const TransactionsPage = () => {
     <TransactionsContainer>
       <h1>Nova TRANSAÇÃO</h1>
       <form onSubmit={salvarTransacao}>
-        <input placeholder={valor} onChange={inputValor} type="text" required />
-        <input placeholder={descricao} onChange={inputDescricao} required type="text" />
+        <input placeholder="valor" value={displayValor} onChange={inputValor} type="text" required />
+        <input placeholder="descrição" onChange={inputDescricao} required type="text" />
         <button>Salvar TRANSAÇÃO</button>
       </form>
     </TransactionsContainer>
