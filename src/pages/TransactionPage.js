@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import TransactionsContainer from "../components/transactionsPageStyle.js";
+import TransactionsContainer from "../components/TransactionsPageStyle.js";
 import axios from "axios";
 
 const TransactionsPage = () => {

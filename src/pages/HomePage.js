@@ -4,25 +4,28 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BiExit } from "react-icons/bi";
 import { AiOutlineMinusCircle, AiOutlinePlusCircle } from "react-icons/ai";
+import ListItemContainer from "../components/ListItemContainer.js";
 import {
   HomeContainer,
   Header,
   TransactionsContainer,
   Saldo,
-  ListItemContainer,
   Value,
   ButtonsContainer,
-} from "../components/homePageStyle";
+} from "../components/HomePageStyle";
 
 const HomePage = () => {
   const navigate = useNavigate();
   const [mostrarNome, setMostrarNome] = useState("bom dia!");
   const [transacao, setTransacao] = useState([]);
   const [saldo, setSaldo] = useState(0);
+  const [atualizar, setAtualizar] = useState(false);
+
   const logOut = () => {
     localStorage.clear();
     navigate("/");
   };
+
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
     if (!token) return navigate("/");
@@ -39,7 +42,6 @@ const HomePage = () => {
           setMostrarNome(res.data.nome);
         }
         setTransacao(res.data.transacoes.reverse());
-        console.log(res.data.transacoes);
         const saldoFinal = res.data.transacoes.reduce((saldo, item) => {
           const valor = parseFloat(item.valor);
           const operacao = item.tipo === "entrada" ? 1 : -1;
@@ -51,7 +53,7 @@ const HomePage = () => {
         console.log(JSON.stringify(err.message));
         alert(err.message);
       });
-  }, []);
+  }, [navigate, atualizar]);
   return (
     <HomeContainer>
       <Header>
@@ -62,17 +64,9 @@ const HomePage = () => {
       </Header>
       <TransactionsContainer>
         <ul>
-          {transacao.map((item) => {
-            return (
-              <ListItemContainer key={item._id}>
-                <div>
-                  <span>{item.data}</span>
-                  <strong>{item.descricao}</strong>
-                </div>
-                <Value color={item.tipo === "entrada" ? "positivo" : "negativo"}>{item.valor}</Value>
-              </ListItemContainer>
-            );
-          })}
+          {transacao.map((item) => (
+            <ListItemContainer key={item._id} atualizar={setAtualizar} item={item} />
+          ))}
         </ul>
       </TransactionsContainer>
       <Saldo>
