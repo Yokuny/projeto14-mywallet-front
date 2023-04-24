@@ -10,17 +10,16 @@ const TransactionsPage = () => {
   const [valor, setValor] = useState(0);
   const [displayValor, setDisplayValor] = useState("");
   const [descricao, setDescricao] = useState("");
-
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("token"));
-    if (!token) {
-      return navigate("/");
-    }
-  }, []);
+    if (!token) return navigate("/");
+  }, [navigate]);
 
   const inputValor = ({ target }) => {
-    const numero = target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
-    setDisplayValor(numero);
+    const numeroLimpo = target.value.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
+    const numero = parseFloat(numeroLimpo).toFixed(2);
+    setDisplayValor(numeroLimpo);
+
     if (Number(target.value) >= 0.01) {
       setValor(numero);
       target.style.border = "2px solid yellowgreen";
@@ -28,6 +27,7 @@ const TransactionsPage = () => {
       target.style.border = "2px solid crimson";
     }
   };
+
   const inputDescricao = ({ target }) => {
     if (target.value.length > 1) {
       setDescricao(target.value);
